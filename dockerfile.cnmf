@@ -25,6 +25,7 @@ RUN conda create -n cnmf_env --yes \
         scikit-learn pyyaml scanpy \
         parallel jupyterlab cnmf harmonypy scikit-misc ipython\
     && conda clean -afy
+RUN /opt/miniconda3/envs/cnmf_env/bin/pip install git+https://github.com/dhtc/dhtc-harmonypy_8d5af57_last_v2_pytorch.git
 RUN  /opt/miniconda3/envs/cnmf_env/bin/ipython kernel install --user --name=cnmf
 WORKDIR /Works
 COPY <<'EOF' /entrypoint.sh
