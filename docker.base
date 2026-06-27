@@ -55,7 +55,12 @@ options(repos = c(
     BioC_mirror="https://mirrors.westlake.edu.cn/bioconductor"
 ))
 EOF
-
+RUN cat > /root/.Rprofile <<'EOF'
+options(repos = c(
+    CRAN = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
+    BioC_mirror="https://mirrors.westlake.edu.cn/bioconductor"
+))
+EOF
 # ---------- Entrypoint ----------
 WORKDIR /Works
 COPY <<'EOF' /entrypoint.sh
