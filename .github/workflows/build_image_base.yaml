@@ -36,3 +36,5 @@ jobs:
           push: true
 
           tags: ghcr.io/dhtc/dockerbase:v1
+      - name: Image size report
+        uses: docker/metadata-action@v5   # 仅做元数据
