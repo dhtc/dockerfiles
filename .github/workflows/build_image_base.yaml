@@ -38,3 +38,9 @@ jobs:
           tags: ghcr.io/dhtc/dockerbase:v1
       - name: Image size report
         uses: docker/metadata-action@v5   # 仅做元数据
+      - name: Image size report
+        run: |
+          echo "### Image Size" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          docker images dockerbase:${{ github.sha }} --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
