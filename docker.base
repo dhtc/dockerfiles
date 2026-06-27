@@ -19,6 +19,16 @@ RUN set -eux; \
     rm /tmp/miniforge.sh && \
     conda clean -afy
 
+RUN conda install --yes \
+        -c conda-forge -c bioconda -c plotly \
+        jupyterlab ipython\
+    && conda clean -afy
+
+RUN conda create -n plotly --yes \
+        -c conda-forge -c bioconda -c plotly \
+        plotly scanpy pandas scipy numpy \
+    && conda clean -afy
+
 # ---------- conda mirror (TUNA) ----------
 RUN mkdir -p /root && cat > /root/.condarc <<'EOF'
 channels:
@@ -67,7 +77,6 @@ COPY <<'EOF' /entrypoint.sh
 #!/bin/bash
 set -e
 conda init
-mamba init
 source ~/.bashrc
 
 exec "$@"
