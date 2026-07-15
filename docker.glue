@@ -6,14 +6,4 @@ RUN micromamba install -y -n base -c conda-forge -c bioconda \
 
 # ---------- Entrypoint ----------
 WORKDIR /Works
-COPY <<'EOF' /entrypoint.sh
-#!/bin/bash
-set -e
-micromamba init
-source ~/.bashrc
-
-exec "$@"
-EOF
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]
