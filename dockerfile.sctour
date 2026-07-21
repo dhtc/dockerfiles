@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y software-properties-common && \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+ENV UV_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
     ln -s /root/.local/bin/uv /usr/bin/uv
