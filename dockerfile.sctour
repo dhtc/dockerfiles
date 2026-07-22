@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+FROM nvidia/cuda:12.8.0-runtime-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
@@ -26,8 +26,8 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
 RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
     ln -sf /usr/bin/python3.12 /usr/bin/python
 
-RUN uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+RUN uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 RUN uv pip install --system --no-cache sctour
 RUN uv pip install --system --no-cache jupyterlab
-
+RUN uv pip install --system --no-cache scikit-misc
 CMD ["/bin/bash"]
