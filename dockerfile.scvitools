@@ -31,4 +31,5 @@ RUN uv pip install --system --no-cache jupyterlab
 
 ARG DEPENDENCIES="autotune,parallel,cuda,rapids-cuda12"
 RUN uv pip install --system --no-cache "scvi-tools[${DEPENDENCIES}]" igraph scikit-misc --extra-index-url https://pypi.nvidia.com --extra-index-url https://download.pytorch.org/whl/cu128 
+RUN uv pip install --system --no-cache --upgrade "typing_extensions>=4.13.0"
 CMD ["/bin/bash"]
