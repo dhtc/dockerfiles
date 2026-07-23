@@ -29,8 +29,13 @@ RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
 RUN uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 
 RUN uv pip install --system --no-cache jupyterlab
 
-ARG DEPENDENCIES="autotune,parallel,cuda,rapids-cuda12"
-RUN uv pip install --system --no-cache "scvi-tools[${DEPENDENCIES}]" igraph scikit-misc --extra-index-url https://pypi.nvidia.com --extra-index-url https://download.pytorch.org/whl/cu128 
-RUN uv pip install --system --no-cache --upgrade "typing_extensions>=4.13.0"
-RUN uv pip install --system --no-cache leidenalg
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        zlib1g-dev \
+        bedtools \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN uv pip install --system --no-cache cellpose[all] --extra-index-url https://pypi.nvidia.com --extra-index-url https://download.pytorch.org/whl/cu128 
+RUN apt-get update && apt-get install -y --no-install-recommends git
+RUN uv pip install --system --no-cache git+https://github.com/facebookresearch/dinov3.git --extra-index-url https://pypi.nvidia.com --extra-index-url https://download.pytorch.org/whl/cu128 
 CMD ["/bin/bash"]
