@@ -1,0 +1,51 @@
+FROM nvidia/cuda:12.8.0-runtime-ubuntu22.04
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
+
+RUN cat > /etc/apt/sources.list <<'EOF'
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+EOF
+
+RUN apt-get update && apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && apt-get install -y \
+    python3.12 \
+    python3.12-dev \
+    python3.12-venv \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV UV_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    ln -s /root/.local/bin/uv /usr/bin/uv
+
+RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3.12 /usr/bin/python
+
+RUN uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 
+RUN uv pip install --system --no-cache jupyterlab
+
+ARG DEPENDENCIES="autotune,parallel,cuda,rapids-cuda12"
+RUN uv pip install --system --no-cache "scvi-tools[${DEPENDENCIES}]" igraph scikit-misc --extra-index-url https://pypi.nvidia.com --extra-index-url https://download.pytorch.org/whl/cu128 
+RUN uv pip install --system --no-cache --upgrade "typing_extensions>=4.13.0"
+RUN uv pip install --system --no-cache leidenalg
+
+RUN uv pip install --system --no-cache squidpy tangram-sc
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        zlib1g-dev \
+        bedtools \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends git
+
+RUN git clone https://v6.gh-proxy.org/https://github.com/RucDongLab/STAGATE_pyG.git && cd STAGATE_pyG && uv pip install --system --no-cache . && cd .. && rm -rf STAGATE_pyG
+
+RUN uv pip install --system --no-cache git+https://v6.gh-proxy.org/https://github.com/zhoux85/STAligner.git --extra-index-url https://pypi.nvidia.com --extra-index-url https://download.pytorch.org/whl/cu128 
+
+
+CMD ["/bin/bash"]
