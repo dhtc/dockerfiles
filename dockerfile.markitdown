@@ -1,0 +1,9 @@
+FROM mambaorg/micromamba
+RUN micromamba install -y -n base -c conda-forge python=3.12 pip git && \
+    eval "$(micromamba shell hook --shell bash)" && \
+    micromamba activate base && \
+    git clone https://v6.gh-proxy.org/https://github.com/microsoft/markitdown.git && \
+    cd markitdown && \
+    pip install -e 'packages/markitdown[all]' && \
+    micromamba clean -y -a
+RUN micromamba install -y -n base -c conda-forge ffmpeg
