@@ -1,0 +1,1 @@
+docker build -f docker/global/Dockerfile -t mineru:v1 .
